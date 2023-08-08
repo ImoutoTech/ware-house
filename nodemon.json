@@ -1,0 +1,5 @@
+{
+  "watch": ["src"],
+  "exec": "esno src/index.js",
+  "ext": "js"
+}
