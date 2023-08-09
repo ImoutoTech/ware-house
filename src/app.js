@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import logger from 'morgan'
 
-import usersRouter from './routes/users.js'
+import userRoutes from './routes/UserRoutes.js'
 
 const app = express()
 
@@ -14,7 +14,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 
-app.use('/users', usersRouter)
+app.use('/user', userRoutes)
 
 app.use(function (_req, res, _next) {
   res

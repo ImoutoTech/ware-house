@@ -7,6 +7,7 @@ export const ENV = {
   MODE: process.env.MODE,
   TOKEN_SECRET: String(process.env.TOKEN_SECRET),
   MONGO_URL: process.env.MONGO_URL,
+  SSO_URL: process.env.SSO_URL,
 }
 
 export const CONFIG = {
