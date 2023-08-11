@@ -3,6 +3,10 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import logger from 'morgan'
+import { expressjwt } from 'express-jwt'
+import { jwtFormatter, result } from './utils/index.js'
+
+import { ENV } from './config/index.js'
 
 import userRoutes from './routes/UserRoutes.js'
 
@@ -13,6 +17,17 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
+app.use(
+  expressjwt({
+    secret: ENV.TOKEN_SECRET,
+    algorithms: ['HS256'],
+    credentialsRequired: false,
+    requestProperty: 'user',
+    onExpired: (_req, res) =>
+      res.status(401).json(result(401, 'token expired', null)),
+  })
+)
+app.use(jwtFormatter)
 
 app.use('/user', userRoutes)
 
