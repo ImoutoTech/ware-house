@@ -4,6 +4,8 @@ import {
   getMySite,
   deleteSite,
   modifySite,
+  getSiteDetail,
+  getSiteConfigs,
 } from '../service/SiteService'
 
 const router = express.Router()
@@ -22,6 +24,14 @@ router.delete('/:id', async (req, res, _next) => {
 
 router.put('/:id', async (req, res, _next) => {
   res.json(await modifySite(req.user.id, req.params.id, req.body))
+})
+
+router.get('/:id', async (req, res, _next) => {
+  res.json(await getSiteDetail(req.params.id))
+})
+
+router.get('/:id/configs', async (req, res, _next) => {
+  res.json(await getSiteConfigs(req.params.id))
 })
 
 export default router
