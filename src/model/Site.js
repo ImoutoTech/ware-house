@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const SiteSchema = {
-  domain: [],
+  domains: [],
   owner: String,
   name: String,
   configs: [],

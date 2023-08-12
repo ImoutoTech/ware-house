@@ -11,6 +11,7 @@ import { ENV } from './config/index.js'
 
 import UserRoutes from './routes/UserRoutes.js'
 import ConfigRoutes from './routes/ConfigRoutes.js'
+import SiteRoutes from './routes/SiteRoutes.js'
 
 const app = express()
 
@@ -33,6 +34,7 @@ app.use(jwtFormatter)
 
 app.use('/user', UserRoutes)
 app.use('/config', ConfigRoutes)
+app.use('/site', SiteRoutes)
 
 // 404处理
 app.use(function (_req, res, _next) {

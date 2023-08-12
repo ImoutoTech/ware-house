@@ -22,3 +22,8 @@ export const jwtFormatter = (req, _res, next) => {
 
 export const getDate = (date = new Date()) =>
   dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+
+export const formatStrArr = (str) =>
+  String(str)
+    .split(',')
+    .filter((item) => !!item)
