@@ -54,12 +54,18 @@ export const modifyConfig = async (owner, slug, body) => {
   }
 
   if (!isNil(body.slug)) {
+    if (!body.slug) {
+      throw new Error('invalid slug')
+    }
+
     if ((await Config.find({ slug: body.slug }).exec()).length > 1) {
       throw new Error('slug existed')
     }
 
     config.slug = body.slug
   }
+
+  config.updated_at = getDate()
 
   await config.save()
 
