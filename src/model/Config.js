@@ -2,7 +2,8 @@ import mongoose from 'mongoose'
 
 const ConfigSchema = {
   data: String,
-  owner: String,
+  owner: Number,
+  name: String,
   slug: String,
   created_at: String,
   updated_at: String,

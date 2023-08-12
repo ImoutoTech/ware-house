@@ -4,7 +4,16 @@ import { isNil } from 'lodash-es'
 
 import { getDate, success } from '../utils'
 
-export const createConfig = async (data, owner, slug) => {
+/**
+ * 创建配置
+ *
+ * @param {string} data 配置内容
+ * @param {number} owner 拥有者
+ * @param {string} slug slug
+ * @param {string} name 名字
+ * @returns ConfigJson
+ */
+export const createConfig = async (data, owner, slug, name) => {
   const slugExists = await Config.exists({ slug })
 
   if (slug && slugExists) {
@@ -14,6 +23,7 @@ export const createConfig = async (data, owner, slug) => {
   const config = new Config({
     data,
     owner,
+    name,
     slug: slug || uuidv4(),
     created_at: getDate(),
     updated_at: getDate(),
@@ -24,14 +34,33 @@ export const createConfig = async (data, owner, slug) => {
   return success(config.toJSON())
 }
 
+/**
+ * 获取指定Config列表
+ *
+ * @param {Object} filter 过滤条件
+ * @returns Config[]
+ */
 export const getConfigList = async (filter) => {
   return await Config.find(filter).exec()
 }
 
+/**
+ * 获取用户Config列表
+ *
+ * @param {number} owner 所有者ID
+ * @returns Config[]
+ */
 export const getMyConfig = async (owner) => {
   return success(await getConfigList({ owner }))
 }
 
+/**
+ * 删除配置
+ *
+ * @param {number} owner 所有者ID
+ * @param {string} slug slug
+ * @returns null
+ */
 export const deleteConfig = async (owner, slug) => {
   const config = await Config.findOne({ owner, slug }).exec()
   if (isNil(config)) {
@@ -43,15 +72,25 @@ export const deleteConfig = async (owner, slug) => {
   return success(null)
 }
 
+/**
+ * 编辑配置
+ *
+ * @param {string} owner 所有者ID
+ * @param {string} slug slug
+ * @param {Object} body 请求体
+ * @returns null
+ */
 export const modifyConfig = async (owner, slug, body) => {
   const config = await Config.findOne({ owner, slug }).exec()
   if (isNil(config)) {
     throw new Error('no such config')
   }
 
-  if (!isNil(body.data)) {
-    config.data = body.data
-  }
+  ;['data', 'name'].forEach((key) => {
+    if (!isNil(body[key])) {
+      config[key] = body[key]
+    }
+  })
 
   if (!isNil(body.slug)) {
     if (!body.slug) {
@@ -70,4 +109,19 @@ export const modifyConfig = async (owner, slug, body) => {
   await config.save()
 
   return success(null)
+}
+
+/**
+ * 获取Config详情
+ *
+ * @param {string} slug slug
+ * @returns ConfigJson
+ */
+export const getConfigDetail = async (slug) => {
+  const config = await Config.findOne({ slug }).exec()
+  if (isNil(config)) {
+    throw new Error('no such config')
+  }
+
+  return success(config.toJSON())
 }
