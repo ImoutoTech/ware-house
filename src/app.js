@@ -8,7 +8,8 @@ import { jwtFormatter, result } from './utils/index.js'
 
 import { ENV } from './config/index.js'
 
-import userRoutes from './routes/UserRoutes.js'
+import UserRoutes from './routes/UserRoutes.js'
+import ConfigRoutes from './routes/ConfigRoutes.js'
 
 const app = express()
 
@@ -21,15 +22,16 @@ app.use(
   expressjwt({
     secret: ENV.TOKEN_SECRET,
     algorithms: ['HS256'],
-    credentialsRequired: false,
+    credentialsRequired: true,
     requestProperty: 'user',
     onExpired: (_req, res) =>
       res.status(401).json(result(401, 'token expired', null)),
-  })
+  }).unless({ path: ['/user/login'] })
 )
 app.use(jwtFormatter)
 
-app.use('/user', userRoutes)
+app.use('/user', UserRoutes)
+app.use('/config', ConfigRoutes)
 
 app.use(function (_req, res, _next) {
   res
@@ -38,8 +40,7 @@ app.use(function (_req, res, _next) {
 })
 
 app.use(function (err, _req, res, _next) {
-  console.error(err.stack)
-  res.status(500).json(err)
+  res.status(500).json(result(100, err.message || err.inner.message, null))
 })
 
 export default app
