@@ -88,7 +88,6 @@ export const getSiteConfigs = async (id) => {
  * @returns Site[]
  */
 export const getMySite = async (owner) => {
-  console.log(owner)
   return success((await getSiteList({ owner })).map((item) => item.toJSON()))
 }
 
