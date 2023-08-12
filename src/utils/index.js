@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 export const result = (code, msg, data) => {
   return {
     code,
@@ -17,3 +19,6 @@ export const jwtFormatter = (req, _res, next) => {
 
   next()
 }
+
+export const getDate = (date = new Date()) =>
+  dayjs(date).format('YYYY-MM-DD HH:mm:ss')
