@@ -11,8 +11,8 @@ async function run() {
 
   await mongoose.connect(ENV.MONGO_URL)
 
-  app.listen(4000, () => {
-    console.log(`[${CONFIG.TITLE}] listening on port ${ENV.PORT || 'unknown'}`)
+  app.listen(Number(ENV.PORT) || 4000, () => {
+    console.log(`[${CONFIG.TITLE}] listening on port ${ENV.PORT || '4000'}`)
   })
 }
 
