@@ -19,3 +19,12 @@ export const updateConfigDomin = async (id) => {
 
   await cm.save()
 }
+
+export const domainGate = async (id, origin) => {
+  let cm = await ConfigDomain.findOne({ config: id }).exec()
+  if (isNil(cm)) {
+    return false
+  }
+
+  return cm.domains.includes(origin)
+}

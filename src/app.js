@@ -18,7 +18,8 @@ const app = express()
 app.use(logger('dev'))
 app.use(
   cors({
-    origin: corsHandler,
+    // origin: corsHandler,
+    origin: true,
   })
 )
 app.use(express.json())

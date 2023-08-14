@@ -1,6 +1,7 @@
 import Config from '../model/Config'
 import { v4 as uuidv4 } from 'uuid'
 import { isNil } from 'lodash-es'
+import { domainGate } from './ConfigDomainService'
 
 import { getDate, success } from '../utils'
 
@@ -133,10 +134,14 @@ export const getConfigDetail = async (slug) => {
  * @param {string} slug slug
  * @returns ConfigJson
  */
-export const getConfig = async (slug) => {
+export const getConfig = async (slug, origin) => {
   const config = await Config.findOne({ slug }).exec()
   if (isNil(config)) {
     throw new Error('no such config')
+  }
+
+  if (!(await domainGate(config._id, origin))) {
+    throw new Error('not allowed to visit this config')
   }
 
   return JSON.parse(config.data)

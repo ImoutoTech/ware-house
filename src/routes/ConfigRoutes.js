@@ -7,6 +7,7 @@ import {
   getConfigDetail,
   getConfig,
 } from '../service/ConfigService'
+import cors from 'cors'
 
 const router = express.Router()
 
@@ -28,8 +29,8 @@ router.put('/:slug', async (req, res, _next) => {
   res.json(await modifyConfig(req.user.id, req.params.slug, req.body))
 })
 
-router.get('/get', async (req, res, _next) => {
-  res.json(await getConfig(req.query.slug))
+router.get('/get', cors({ origin: true }), async (req, res, _next) => {
+  res.json(await getConfig(req.query.slug, req.headers.origin))
 })
 
 router.get('/:id', async (req, res, _next) => {
