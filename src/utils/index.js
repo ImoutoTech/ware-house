@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { ENV } from '../config'
 
 export const result = (code, msg, data) => {
   return {
@@ -27,3 +28,11 @@ export const formatStrArr = (str) =>
   String(str)
     .split(',')
     .filter((item) => !!item)
+
+export const corsHandler = (origin, cb) => {
+  if (ENV.FRONT_URL.indexOf(origin) !== -1 || !origin) {
+    cb(null, true)
+  } else {
+    cb(new Error('Not allowed by CORS'))
+  }
+}

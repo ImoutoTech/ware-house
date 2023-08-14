@@ -125,3 +125,19 @@ export const getConfigDetail = async (slug) => {
 
   return success(config.toJSON())
 }
+
+/**
+ * 用户获取config
+ * 直接返回
+ *
+ * @param {string} slug slug
+ * @returns ConfigJson
+ */
+export const getConfig = async (slug) => {
+  const config = await Config.findOne({ slug }).exec()
+  if (isNil(config)) {
+    throw new Error('no such config')
+  }
+
+  return JSON.parse(config.data)
+}

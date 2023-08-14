@@ -5,6 +5,7 @@ import {
   deleteConfig,
   modifyConfig,
   getConfigDetail,
+  getConfig,
 } from '../service/ConfigService'
 
 const router = express.Router()
@@ -25,6 +26,10 @@ router.delete('/:slug', async (req, res, _next) => {
 
 router.put('/:slug', async (req, res, _next) => {
   res.json(await modifyConfig(req.user.id, req.params.slug, req.body))
+})
+
+router.get('/get', async (req, res, _next) => {
+  res.json(await getConfig(req.query.slug))
 })
 
 router.get('/:id', async (req, res, _next) => {

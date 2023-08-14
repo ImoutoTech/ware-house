@@ -5,7 +5,7 @@ import cors from 'cors'
 import logger from 'morgan'
 import { expressjwt } from 'express-jwt'
 import 'express-async-errors'
-import { jwtFormatter, result } from './utils/index.js'
+import { jwtFormatter, result, corsHandler } from './utils/index.js'
 
 import { ENV } from './config/index.js'
 
@@ -16,7 +16,11 @@ import SiteRoutes from './routes/SiteRoutes.js'
 const app = express()
 
 app.use(logger('dev'))
-app.use(cors())
+app.use(
+  cors({
+    origin: corsHandler,
+  })
+)
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
@@ -28,7 +32,7 @@ app.use(
     requestProperty: 'user',
     onExpired: (_req, res) =>
       res.status(401).json(result(401, 'token expired', null)),
-  }).unless({ path: ['/user/login'] })
+  }).unless({ path: ['/user/login', '/config/get'] })
 )
 app.use(jwtFormatter)
 
