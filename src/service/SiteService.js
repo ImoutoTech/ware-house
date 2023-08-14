@@ -1,6 +1,7 @@
 import Site from '../model/Site'
 import { isNil } from 'lodash-es'
 import { getConfigList } from './ConfigService'
+import { updateConfigDomin } from './ConfigDomainService'
 
 import { getDate, success, formatStrArr } from '../utils'
 
@@ -41,6 +42,9 @@ export const createSite = async (owner, body) => {
   })
 
   await site.save()
+
+  // 异步更新一下config domin映射
+  site.configs.forEach(updateConfigDomin)
 
   return success(site.toJSON())
 }
@@ -105,7 +109,12 @@ export const deleteSite = async (owner, id) => {
     throw new Error('not your site')
   }
 
+  const configs = site.configs
+
   await site.deleteOne()
+
+  // 异步更新
+  configs.forEach(updateConfigDomin)
 
   return success(null)
 }
@@ -120,6 +129,7 @@ export const deleteSite = async (owner, id) => {
  */
 export const modifySite = async (owner, id, body) => {
   const site = await getSiteById(id)
+  let needUpdateConfig = false
 
   if (site.owner !== owner) {
     throw new Error('not your site')
@@ -132,12 +142,18 @@ export const modifySite = async (owner, id, body) => {
   ;['domains', 'configs'].forEach((key) => {
     if (!isNil(body[key])) {
       site[key] = formatStrArr(body[key])
+      needUpdateConfig = true
     }
   })
 
   site.updated_at = getDate()
 
   await site.save()
+
+  if (needUpdateConfig) {
+    // 异步更新
+    site.configs.forEach(updateConfigDomin)
+  }
 
   return success(null)
 }
