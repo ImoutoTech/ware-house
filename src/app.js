@@ -27,8 +27,9 @@ app.use(
     algorithms: ['HS256'],
     credentialsRequired: true,
     requestProperty: 'user',
-    onExpired: (_req, res) =>
-      res.status(401).json(result(401, 'token expired', null)),
+    onExpired: (_req, error) => {
+      throw error
+    },
   }).unless({ path: ['/user/login', '/config/get'] })
 )
 app.use(jwtFormatter)

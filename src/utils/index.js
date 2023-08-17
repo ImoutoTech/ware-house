@@ -48,6 +48,6 @@ export const corsMiddleWare = (req, res, next) => {
   ) {
     next()
   } else {
-    res.status(403).json(result(100, 'not allowed origin', null))
+    throw new Error('not allowed origin')
   }
 }
