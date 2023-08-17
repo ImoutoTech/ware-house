@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { ENV } from '../config'
+import cors from 'cors'
 
 export const result = (code, msg, data) => {
   return {
@@ -34,5 +35,19 @@ export const corsHandler = (origin, cb) => {
     cb(null, true)
   } else {
     cb(new Error('Not allowed by CORS'))
+  }
+}
+
+export const corsMiddleWare = (req, res, next) => {
+  const { origin } = req.headers
+  const noCheckPath = ['/config/get']
+  if (
+    !origin ||
+    ENV.FRONT_URL.indexOf(origin) !== -1 ||
+    noCheckPath.includes(req.path)
+  ) {
+    next()
+  } else {
+    res.status(403).json(result(100, 'not allowed origin', null))
   }
 }

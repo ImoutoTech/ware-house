@@ -5,7 +5,7 @@ import cors from 'cors'
 import logger from 'morgan'
 import { expressjwt } from 'express-jwt'
 import 'express-async-errors'
-import { jwtFormatter, result, corsHandler } from './utils/index.js'
+import { jwtFormatter, result, corsMiddleWare } from './utils/index.js'
 
 import { ENV } from './config/index.js'
 
@@ -16,15 +16,11 @@ import SiteRoutes from './routes/SiteRoutes.js'
 const app = express()
 
 app.use(logger('dev'))
-app.use(
-  cors({
-    // origin: corsHandler,
-    origin: true,
-  })
-)
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
+app.use(corsMiddleWare)
 app.use(
   expressjwt({
     secret: ENV.TOKEN_SECRET,

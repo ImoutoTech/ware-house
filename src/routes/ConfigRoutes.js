@@ -29,7 +29,7 @@ router.put('/:slug', async (req, res, _next) => {
   res.json(await modifyConfig(req.user.id, req.params.slug, req.body))
 })
 
-router.get('/get', cors({ origin: true }), async (req, res, _next) => {
+router.get('/get', async (req, res, _next) => {
   res.json(await getConfig(req.query.slug, req.headers.origin))
 })
 
