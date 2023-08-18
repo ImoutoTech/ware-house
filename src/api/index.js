@@ -9,3 +9,12 @@ export const verifySSO = (token) => {
     baseURL: ENV.SSO_URL,
   })
 }
+
+export const getUserInfo = (id, token) => {
+  return axios.get(`/user/${id}`, {
+    headers: {
+      Authorization: token,
+    },
+    baseURL: ENV.SSO_URL,
+  })
+}

@@ -1,4 +1,4 @@
-import { verifySSO } from '../api'
+import { verifySSO, getUserInfo } from '../api'
 import { isNil } from 'lodash-es'
 import dayjs from 'dayjs'
 import jwt from 'jsonwebtoken'
@@ -18,7 +18,12 @@ export const UserLogin = async (ticket) => {
     return verifyRes
   }
 
-  const { email, id, avatar } = verifyRes.data
+  const userInfo = await getUserInfo(
+    verifyRes.data.id,
+    `Bearer ${ticket}`
+  ).then((res) => res.data)
+
+  const { email, id, avatar } = userInfo.data
   const dbUser = await User.findOne({ id }).exec()
   if (isNil(dbUser)) {
     const user = new User({
@@ -44,6 +49,11 @@ export const UserLogin = async (ticket) => {
     })
   }
 
+  // 更新用户信息
+  dbUser.email = email
+  dbUser.avatar = avatar
+  await dbUser.save()
+
   return success({
     user: dbUser.toObject(),
     token: jwt.sign(
@@ -57,4 +67,13 @@ export const UserLogin = async (ticket) => {
       }
     ),
   })
+}
+
+export const getUserData = async (id) => {
+  const user = await User.findOne({ id }).exec()
+  if (isNil(user)) {
+    throw new Error('not such user')
+  }
+
+  return success(user.toObject())
 }
