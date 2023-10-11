@@ -60,6 +60,19 @@ export const getSiteList = async (filter) => {
 }
 
 /**
+ * 获取满足条件的站点列表（分页）
+ * @param {Object} filter 过滤条件
+ * @param {Object} options 分页设置
+ */
+export const getSiteListPaginated = async (filter, options = {}) => {
+  const data = await Site.paginate(filter, options)
+  return {
+    items: data.docs,
+    total: data.totalDocs,
+  }
+}
+
+/**
  * 获取站点所拥有的配置详情列表
  *
  * @param {Site} site 站点
@@ -91,8 +104,8 @@ export const getSiteConfigs = async (id) => {
  * @param {number} owner 用户ID
  * @returns Site[]
  */
-export const getMySite = async (owner) => {
-  return success((await getSiteList({ owner })).map((item) => item.toJSON()))
+export const getMySite = async (owner, options) => {
+  return success(await getSiteListPaginated({ owner }, options))
 }
 
 /**

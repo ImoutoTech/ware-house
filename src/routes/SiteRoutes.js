@@ -7,6 +7,7 @@ import {
   getSiteDetail,
   getSiteConfigs,
 } from '../service/SiteService'
+import { pickAttrs } from '../utils'
 
 const router = express.Router()
 
@@ -15,7 +16,8 @@ router.post('/', async (req, res, _next) => {
 })
 
 router.get('/', async (req, res, _next) => {
-  res.json(await getMySite(req.user.id))
+  const options = pickAttrs(['limit', 'offset', 'search'], req.query)
+  res.json(await getMySite(req.user.id, options))
 })
 
 router.delete('/:id', async (req, res, _next) => {
