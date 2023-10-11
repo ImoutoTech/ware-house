@@ -46,13 +46,27 @@ export const getConfigList = async (filter) => {
 }
 
 /**
+ * 获取指定Config列表（分页）
+ * @param {Object} filter 过滤条件
+ * @param {Object} options 分页设置
+ */
+export const getConfigListPaginated = async (filter, options = {}) => {
+  const data = await Config.paginate(filter, options)
+  return {
+    items: data.docs,
+    total: data.totalDocs,
+  }
+}
+
+/**
  * 获取用户Config列表
  *
  * @param {number} owner 所有者ID
+ * @param {Object} options 分页条件
  * @returns Config[]
  */
-export const getMyConfig = async (owner) => {
-  return success(await getConfigList({ owner }))
+export const getMyConfig = async (owner, options) => {
+  return success(await getConfigListPaginated({ owner }, options))
 }
 
 /**

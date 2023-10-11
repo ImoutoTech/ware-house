@@ -18,7 +18,11 @@ router.post('/', async (req, res, _next) => {
 })
 
 router.get('/', async (req, res, _next) => {
-  res.json(await getMyConfig(req.user.id))
+  const options = ['limit', 'offset', 'search'].reduce(
+    (p, c) => (req.query[c] ? { ...p, [c]: req.query[c] } : p),
+    {}
+  )
+  res.json(await getMyConfig(req.user.id, options))
 })
 
 router.delete('/:slug', async (req, res, _next) => {

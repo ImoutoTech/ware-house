@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 const SiteSchema = {
   domains: [],
@@ -10,6 +11,8 @@ const SiteSchema = {
 }
 
 const schema = new mongoose.Schema(SiteSchema)
+
+schema.plugin(mongoosePaginate)
 
 const Site = mongoose.model('Site', schema)
 

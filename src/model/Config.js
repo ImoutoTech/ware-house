@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 const ConfigSchema = {
   data: String,
@@ -10,6 +11,8 @@ const ConfigSchema = {
 }
 
 const schema = new mongoose.Schema(ConfigSchema)
+
+schema.plugin(mongoosePaginate)
 
 const Config = mongoose.model('Config', schema)
 
