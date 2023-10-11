@@ -7,7 +7,7 @@ import {
   getConfigDetail,
   getConfig,
 } from '../service/ConfigService'
-import cors from 'cors'
+import { pickAttrs } from '../utils'
 
 const router = express.Router()
 
@@ -18,10 +18,7 @@ router.post('/', async (req, res, _next) => {
 })
 
 router.get('/', async (req, res, _next) => {
-  const options = ['limit', 'offset', 'search'].reduce(
-    (p, c) => (req.query[c] ? { ...p, [c]: req.query[c] } : p),
-    {}
-  )
+  const options = pickAttrs(['limit', 'offset', 'search'], req.query)
   res.json(await getMyConfig(req.user.id, options))
 })
 

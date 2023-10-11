@@ -51,3 +51,6 @@ export const corsMiddleWare = (req, res, next) => {
     throw new Error('not allowed origin')
   }
 }
+
+export const pickAttrs = (attrs, obj) =>
+  attrs.reduce((p, c) => (obj[c] ? { ...p, [c]: obj[c] } : p), {})
