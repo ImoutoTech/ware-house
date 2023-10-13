@@ -105,7 +105,14 @@ export const getSiteConfigs = async (id) => {
  * @returns Site[]
  */
 export const getMySite = async (owner, options) => {
-  return success(await getSiteListPaginated({ owner }, options))
+  const query = { owner }
+
+  if (options.search) {
+    const searchReg = new RegExp(options.search, 'i')
+    query.name = searchReg
+  }
+
+  return success(await getSiteListPaginated(query, options))
 }
 
 /**

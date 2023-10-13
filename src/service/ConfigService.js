@@ -66,7 +66,14 @@ export const getConfigListPaginated = async (filter, options = {}) => {
  * @returns Config[]
  */
 export const getMyConfig = async (owner, options) => {
-  return success(await getConfigListPaginated({ owner }, options))
+  const query = { owner }
+
+  if (options.search) {
+    const searchReg = new RegExp(options.search, 'i')
+    query.name = searchReg
+  }
+
+  return success(await getConfigListPaginated(query, options))
 }
 
 /**
