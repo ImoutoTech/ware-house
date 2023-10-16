@@ -159,6 +159,8 @@ export const modifySite = async (owner, id, body) => {
     site.name = body.name
   }
 
+  const originConfigs = site.configs
+
   ;['domains', 'configs'].forEach((key) => {
     if (!isNil(body[key])) {
       site[key] = formatStrArr(body[key])
@@ -172,7 +174,7 @@ export const modifySite = async (owner, id, body) => {
 
   if (needUpdateConfig) {
     // 异步更新
-    site.configs.forEach(updateConfigDomin)
+    originConfigs.forEach(updateConfigDomin)
   }
 
   return success(null)
