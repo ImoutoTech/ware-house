@@ -1,6 +1,7 @@
 import Config from '../model/Config'
+import Site from '../model/Site'
 import { v4 as uuidv4 } from 'uuid'
-import { isNil } from 'lodash-es'
+import { isNil, without } from 'lodash-es'
 import { domainGate } from './ConfigDomainService'
 
 import { getDate, success } from '../utils'
@@ -87,6 +88,16 @@ export const deleteConfig = async (owner, slug) => {
   const config = await Config.findOne({ owner, slug }).exec()
   if (isNil(config)) {
     throw new Error('no such config')
+  }
+
+  // cascade delete
+  const sites = await Site.$where(
+    `this.configs.includes('${config._id.toString()}')`
+  ).exec()
+
+  for (const site of sites) {
+    site.configs = without(sites.configs, config._id.toString())
+    await site.save()
   }
 
   await config.deleteOne()
