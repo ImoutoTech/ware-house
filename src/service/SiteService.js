@@ -1,5 +1,5 @@
 import Site from '../model/Site'
-import { isNil } from 'lodash-es'
+import { isNil, union } from 'lodash-es'
 import { getConfigList } from './ConfigService'
 import { updateConfigDomin } from './ConfigDomainService'
 
@@ -174,7 +174,7 @@ export const modifySite = async (owner, id, body) => {
 
   if (needUpdateConfig) {
     // 异步更新
-    originConfigs.forEach(updateConfigDomin)
+    union(originConfigs, site.configs).forEach(updateConfigDomin)
   }
 
   return success(null)

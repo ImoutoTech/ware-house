@@ -18,6 +18,8 @@ export const updateConfigDomin = async (id) => {
   }, [])
 
   await cm.save()
+
+  return cm
 }
 
 export const domainGate = async (id, origin) => {
