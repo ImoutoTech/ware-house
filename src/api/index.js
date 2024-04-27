@@ -22,13 +22,14 @@ export const getUserInfo = (token) => {
 export const authorizeToken = (code) =>
   axios.post(
     '/oauth/token',
-    {
-      client_id: ENV.SSO_ID,
-      client_secret: ENV.SSO_SECRET,
-      code,
-      redirect_uri: ENV.SSO_REDIRECT,
-    },
+    {},
     {
       baseURL: ENV.SSO_URL,
+      params: {
+        client_id: ENV.SSO_ID,
+        client_secret: ENV.SSO_SECRET,
+        code,
+        redirect_uri: ENV.SSO_REDIRECT,
+      },
     }
   )

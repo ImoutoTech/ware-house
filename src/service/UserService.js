@@ -8,17 +8,29 @@ import User from '../model/User'
 import { ENV } from '../config'
 
 export const UserLogin = async (ticket) => {
-  const tokenRes = await authorizeToken(ticket).then((res) => res.data)
+  const tokenRes = await authorizeToken(ticket)
+    .then((res) => {
+      return res.data
+    })
+    .catch((e) => {
+      return e.response.data
+    })
 
   if (tokenRes.code !== 0) {
     return tokenRes
   }
 
-  const { access_token } = tokenRes
+  const { access_token } = tokenRes.data
 
-  const userInfo = await getUserInfo(`Bearer ${access_token}`).then(
-    (res) => res.data
-  )
+  const userInfo = await getUserInfo(`Bearer ${access_token}`)
+    .then((res) => res.data)
+    .catch((e) => {
+      return e.response.data
+    })
+
+  if (userInfo.code !== 0) {
+    return userInfo
+  }
 
   const { email, id, avatar } = userInfo.data
   const dbUser = await User.findOne({ id }).exec()
