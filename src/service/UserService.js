@@ -1,4 +1,4 @@
-import { verifySSO, getUserInfo } from '../api'
+import { verifySSO, getUserInfo, authorizeToken } from '../api'
 import { isNil } from 'lodash-es'
 import dayjs from 'dayjs'
 import jwt from 'jsonwebtoken'
@@ -8,20 +8,17 @@ import User from '../model/User'
 import { ENV } from '../config'
 
 export const UserLogin = async (ticket) => {
-  const verifyRes = await verifySSO(`Bearer ${ticket}`)
-    .then((res) => res.data)
-    .catch((e) => {
-      return e.response.data
-    })
+  const tokenRes = await authorizeToken(ticket).then((res) => res.data)
 
-  if (verifyRes.code !== 0) {
-    return verifyRes
+  if (tokenRes.code !== 0) {
+    return tokenRes
   }
 
-  const userInfo = await getUserInfo(
-    verifyRes.data.id,
-    `Bearer ${ticket}`
-  ).then((res) => res.data)
+  const { access_token } = tokenRes
+
+  const userInfo = await getUserInfo(`Bearer ${access_token}`).then(
+    (res) => res.data
+  )
 
   const { email, id, avatar } = userInfo.data
   const dbUser = await User.findOne({ id }).exec()
